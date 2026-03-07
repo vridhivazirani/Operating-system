@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I/O System & Interrupt Handling</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <!-- Background Decor -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+  <div class="bg-glow glow-3"></div>
+
+  <div class="app-container">
+    <header class="glass-panel">
+      <div class="header-content">
+        <div class="logo-area">
+          <h1>I/O System Model</h1>
+          <p class="subtitle">Interrupts vs Polling Simulator</p>
+        </div>
+        <nav class="tabs-nav">
+          <button class="tab-btn active" data-tab="simulation">Simulation</button>
+          <button class="tab-btn" data-tab="timeline">Timeline</button>
+          <button class="tab-btn" data-tab="flowchart">Flowchart</button>
+          <button class="tab-btn" data-tab="comparison">Comparison</button>
+          <button class="tab-btn" data-tab="research">Research Insights</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- SIMULATION TAB -->
+      <section id="simulation" class="tab-pane active">
+        <div class="simulation-layout">
+          <!-- Diagram Canvas -->
+          <div class="diagram-canvas glass-panel">
+            <div class="cpu-zone">
+              <h3 class="zone-title">CPU Context</h3>
+              <div class="node app-node" id="node-app">
+                <div class="node-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect width="20" height="14" x="2" y="3" rx="2" />
+                    <line x1="8" x2="16" y1="21" y2="21" />
+                    <line x1="12" x2="12" y1="17" y2="21" />
+                  </svg></div>
+                <div class="node-label">Application</div>
+              </div>
+              <div class="path-vertical" id="path-app-os"></div>
+              <div class="node os-node" id="node-os">
+                <div class="node-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect width="16" height="16" x="4" y="4" rx="2" />
+                    <rect width="6" height="6" x="9" y="9" rx="1" />
+                    <path d="M15 2v2" />
+                    <path d="M15 20v2" />
+                    <path d="M2 15h2" />
+                    <path d="M2 9h2" />
+                    <path d="M20 15h2" />
+                    <path d="M20 9h2" />
+                    <path d="M9 2v2" />
+                    <path d="M9 20v2" />
+                  </svg></div>
+                <div class="node-label">System Call / OS</div>
+              </div>
+              <div class="path-vertical" id="path-os-driver"></div>
+              <div class="node driver-node" id="node-driver">
+                <div class="node-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                  </svg></div>
+                <div class="node-label">Device Driver</div>
+              </div>
+            </div>
+
+            <!-- Main Memory node for DMA -->
+            <div class="memory-zone">
+              <div class="node memory-node" id="node-memory">
+                <div class="node-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M4 6v12" />
+                    <path d="M4 10h16" />
+                    <path d="M4 14h16" />
+                    <path d="M20 6v12" />
+                    <rect width="16" height="12" x="4" y="6" rx="2" />
+                  </svg></div>
+                <div class="node-label">Main Memory</div>
+              </div>
+            </div>
+
+            <div class="bus-divider"><span>SYSTEM BUS</span></div>
+
+            <div class="device-zone">
+              <h3 class="zone-title">Hardware Context</h3>
+              <div class="node controller-node" id="node-controller">
+                <div class="node-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect width="16" height="16" x="4" y="4" rx="2" />
+                    <path d="M9 9h6v6H9z" />
+                    <path d="M15 2v2" />
+                    <path d="M15 20v2" />
+                    <path d="M2 15h2" />
+                    <path d="M2 9h2" />
+                    <path d="M20 15h2" />
+                    <path d="M20 9h2" />
+                    <path d="M9 2v2" />
+                    <path d="M9 20v2" />
+                  </svg></div>
+                <div class="node-label">Device Controller</div>
+                <div class="status-indicator" id="controller-status">Idle</div>
+              </div>
+              <div class="path-vertical" id="path-controller-device"></div>
+              <div class="node hw-device-node" id="node-device">
+                <div class="node-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="22" x2="2" y1="12" y2="12" />
+                    <path
+                      d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+                    <line x1="6" x2="6.01" y1="16" y2="16" />
+                    <line x1="10" x2="10.01" y1="16" y2="16" />
+                  </svg></div>
+                <div class="node-label">I/O Device (Disk/Net)</div>
+              </div>
+            </div>
+
+            <!-- Status Overlay -->
+            <div class="status-overlay" id="status-overlay">
+              System Idle. Select a flow to begin.
+            </div>
+
+            <!-- Animated Particles Container -->
+            <div id="animation-layer"></div>
+          </div>
+
+          <!-- Controls and Logs -->
+          <div class="side-panel">
+            <div class="controls-card glass-panel">
+              <h3>Execution Controls</h3>
+              <p>Select a mechanism to handle the I/O request.</p>
+              <div class="btn-group">
+                <button id="btn-polling" class="action-btn btn-primary">Start Polling Flow</button>
+                <button id="btn-interrupt" class="action-btn btn-secondary">Start Interrupt Flow</button>
+                <button id="btn-dma" class="action-btn btn-tertiary">Start DMA Flow</button>
+                <button id="btn-coalescing" class="action-btn btn-quaternary">Start Coalescing Flow</button>
+                <button id="btn-reset" class="action-btn btn-outline"
+                  style="border-color: var(--danger); color: var(--danger);">Reset System</button>
+              </div>
+              <!-- CPU Status indicator -->
+              <div class="metrics-dashboard">
+                <div class="metric">
+                  <span class="label">CPU State:</span>
+                  <span class="value state-idle" id="cpu-state">Idle</span>
+                </div>
+                <div class="metric">
+                  <span class="label">Device State:</span>
+                  <span class="value state-idle" id="dev-state">Idle</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="terminal-card glass-panel">
+              <div class="terminal-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="terminal-title">System Log</span>
+              </div>
+              <div class="terminal-body" id="terminal-output">
+                <div class="log-entry sys">> System Initialized. Waiting for requests...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TIMELINE TAB -->
+      <section id="timeline" class="tab-pane">
+        <div class="glass-panel content-pane">
+          <h2>Event Timeline</h2>
+          <p>Visualizing the chronological sequence of I/O request handling.</p>
+          <div class="timeline-container" id="event-timeline">
+            <p class="empty-state">Run a simulation to generate its timeline.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FLOWCHART TAB -->
+      <section id="flowchart" class="tab-pane">
+        <div class="glass-panel content-pane">
+          <h2>Interrupt Handling Flowchart</h2>
+          <div class="flowchart-container">
+            <div class="fc-step fc-app">User Program executing</div>
+            <div class="fc-arrow">↓ <span>I/O request</span></div>
+            <div class="fc-row">
+              <div class="fc-col">
+                <div class="fc-step fc-os">Execute pending instructions</div>
+                <div class="fc-step fc-os dashed">CPU does other work</div>
+                <div class="fc-arrow">↓</div>
+                <div class="fc-step fc-os alert">Context Switch & Save State</div>
+                <div class="fc-arrow">↓</div>
+                <div class="fc-step fc-isr">Interrupt Service Routine (ISR)</div>
+                <div class="fc-arrow">↓</div>
+                <div class="fc-step fc-os alert">Restore Context & Resume</div>
+              </div>
+              <div class="fc-col hardware-side">
+                <div class="fc-arrow-diagonal">hw process</div>
+                <div class="fc-step fc-hw">Device Controller operates I/O</div>
+                <div class="fc-arrow">↓ <span>operation complete</span></div>
+                <div class="fc-step fc-hw highlight">Send Interrupt Signal to CPU</div>
+              </div>
+            </div>
+            <div class="fc-arrow">↓</div>
+            <div class="fc-step fc-app">Resume User Program</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPARISON TAB -->
+      <section id="comparison" class="tab-pane">
+        <div class="glass-panel content-pane">
+          <h2>Performance & Feature Comparison</h2>
+          <p>Summary of Key Performance Results (Ref: Table II & IV)</p>
+          <div class="table-responsive">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Metric / Feature</th>
+                  <th>Polling (Busy-Wait)</th>
+                  <th>Interrupt-Driven I/O</th>
+                  <th>Advantage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CPU Util. @ High I/O</td>
+                  <td>95%</td>
+                  <td>48%</td>
+                  <td><span class="tag good">2.0× lower</span></td>
+                </tr>
+                <tr>
+                  <td>Latency @ 80% Load</td>
+                  <td>50 ms</td>
+                  <td>7.5 ms</td>
+                  <td><span class="tag good">6.7× lower</span></td>
+                </tr>
+                <tr>
+                  <td>Power @ 1K IOPS</td>
+                  <td>9.5 W</td>
+                  <td>2.8 W</td>
+                  <td><span class="tag good">3.4× lower</span></td>
+                </tr>
+                <tr>
+                  <td>DMA Throughput 1MB</td>
+                  <td>900 MB/s (PIO)</td>
+                  <td>8,200 MB/s</td>
+                  <td><span class="tag good">9.1× higher</span></td>
+                </tr>
+                <tr>
+                  <td>Power State Mgmt</td>
+                  <td><span class="tag bad">Prevents C-state entry</span></td>
+                  <td><span class="tag good">Enables C1/C3/C6 states</span></td>
+                  <td>Power savings</td>
+                </tr>
+                <tr>
+                  <td>Scalability</td>
+                  <td>O(n) CPU cost per device</td>
+                  <td>Priority queue; scales to 100s of IRQs</td>
+                  <td>Concurrency</td>
+                </tr>
+                <tr>
+                  <td>Overhead @ 100K IRQ/s</td>
+                  <td>N/A</td>
+                  <td><span class="tag bad">34% (Coalesce needed)</span></td>
+                  <td>Polling preferred at extreme scale</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESEARCH INSIGHTS TAB -->
+      <section id="research" class="tab-pane">
+        <div class="glass-panel content-pane research-pane">
+          <h2>Research Insights & Quantitative Analysis</h2>
+
+          <div class="abstract-box">
+            <h3>Abstract Summary</h3>
+            <p>This model traces the complete request path from user-space application through the system call
+              interface, device driver layer, controller, and physical device, then back via the ISR. Results confirm
+              that interrupt-driven I/O yields up to <strong>47% reduction in CPU utilization</strong>, <strong>6.7×
+                lower response latency</strong> at 80% system load, and <strong>9.1× higher DMA throughput</strong>
+              versus PIO at 1 MB transfer size.</p>
+          </div>
+
+          <div class="charts-grid">
+            <div class="chart-container">
+              <h3>CPU Util vs Workload</h3>
+              <canvas id="chartCpuUtil"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3>Response Latency vs System Load</h3>
+              <canvas id="chartLatency"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3>Power Draw vs IOPS</h3>
+              <canvas id="chartPower"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3>Throughput: DMA vs PIO</h3>
+              <canvas id="chartThroughput"></canvas>
+            </div>
+          </div>
+
+          <div class="gantt-section">
+            <h3>Multi-Level Interrupt Priority Scheduling (Gantt)</h3>
+            <p class="subtitle">Illustrating preemption levels over an 18 ms window.</p>
+            <div class="gantt-chart">
+              <div class="gantt-row">
+                <div class="gantt-label">Process A (User)</div>
+                <div class="gantt-bar process-a" style="left: 0%; width: 22.2%;">0-4ms</div>
+                <div class="gantt-bar process-a" style="left: 44.4%; width: 5.5%;">8-9ms</div>
+              </div>
+              <div class="gantt-row">
+                <div class="gantt-label">Disk ISR (IRQ#14)</div>
+                <div class="gantt-bar isr-disk" style="left: 22.2%; width: 11.1%;">4-6ms</div>
+                <div class="gantt-bar isr-disk" style="left: 50%; width: 11.1%;">9-11ms (softirq)</div>
+              </div>
+              <div class="gantt-row">
+                <div class="gantt-label">Serial ISR (IRQ#3)</div>
+                <div class="gantt-bar isr-serial" style="left: 33.3%; width: 5.5%;">6-7ms</div>
+              </div>
+              <div class="gantt-row">
+                <div class="gantt-label">NMI (Critical)</div>
+                <div class="gantt-bar isr-nmi" style="left: 38.8%; width: 5.5%;">7-8ms</div>
+              </div>
+              <div class="gantt-row">
+                <div class="gantt-label">Process B (User)</div>
+                <div class="gantt-bar process-b" style="left: 61.1%; width: 38.9%;">11-18ms</div>
+              </div>
+              <div class="gantt-axis">
+                <span>0ms</span><span>4ms</span><span>8ms</span><span>12ms</span><span>16ms</span><span>18ms</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>
