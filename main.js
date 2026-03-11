@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: ['Low', 'Medium', 'High', 'Mixed'],
             datasets: [
                 { label: 'Polling', data: [98, 97, 95, 96], backgroundColor: '#ef4444' },
-                { label: 'Interrupt-Driven', data: [12, 28, 48, 35], backgroundColor: '#8b5cf6' }
+                { label: 'Interrupt-Driven', data: [12, 28, 48, 35], backgroundColor: '#6366f1' }
             ]
         },
         options: {
@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: ['0%', '20%', '40%', '60%', '80%', '100%'],
             datasets: [
                 { label: 'Polling', data: [2, 4, 15, 30, 50, 95], borderColor: '#ef4444', tension: 0.3, fill: false },
-                { label: 'Interrupt-Driven', data: [2, 3, 5, 6, 7.5, 9], borderColor: '#8b5cf6', tension: 0.1, fill: false }
+                { label: 'Interrupt-Driven', data: [2, 3, 5, 6, 7.5, 9], borderColor: '#6366f1', tension: 0.1, fill: false }
             ]
         },
         options: {
@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: ['4 KB', '64 KB', '256 KB', '1 MB'],
             datasets: [
                 { label: 'PIO (Programmed I/O)', data: [40, 250, 600, 900], backgroundColor: '#f59e0b' },
-                { label: 'DMA', data: [35, 1200, 4500, 8200], backgroundColor: '#06b6d4' }
+                { label: 'DMA', data: [35, 1200, 4500, 8200], backgroundColor: '#0ea5e9' }
             ]
         },
         options: {
