@@ -3,9 +3,6 @@
 An interactive, conceptual execution model demonstrating how an Operating System handles I/O requests, contrasting Polling (Busy-Waiting) mechanisms against efficient, asynchronous Interrupt-Driven approaches. 
 
 This project was built as an interactive companion piece for a research paper analyzing the I/O subsystem in modern operating systems, tracing the request path from user-space application through the system call interface, device driver, hardware controller, and back via the Interrupt Service Routine (ISR).
-
-![Simulation Preview](./preview.png) *(Note: Please add a screenshot named preview.png here)*
-
 ## Features
 
 - 🔋 **Performance Simulations**: Watch data flow in real-time as you trigger different I/O handling mechanisms.
