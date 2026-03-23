@@ -31,7 +31,7 @@ This project was built as an interactive companion piece for a research paper an
 1. Clone this repository.
 2. Navigate into the directory:
    ```bash
-   cd io-interrupt-model
+   cd Operating-system
    ```
 3. Install dependencies (`chart.js`):
    ```bash
